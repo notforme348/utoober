@@ -1,0 +1,7 @@
+client_secret.json
+__pycache__/
+*.pyc
+node_modules/
+.wrangler/
+
+YT.md

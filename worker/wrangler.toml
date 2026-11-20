@@ -1,0 +1,6 @@
+name = "tg-yt-webhook"
+main = "index.js"
+compatibility_date = "2026-11-01"
+
+[vars]
+GH_REPO = "YOUR_GITHUB_USER/tg-yt-uploader"   # change this
