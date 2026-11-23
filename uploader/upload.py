@@ -61,6 +61,8 @@ class YouTube:
               "X-Upload-Content-Length": str(size), "X-Upload-Content-Type": mime}
         r = await self.http.post(self.API, params={"uploadType": "resumable", "part": "snippet,status"},
                                  headers=h, content=json.dumps(meta))
+        if r.status_code >= 400:
+            print(f"YouTube upload init failed: HTTP {r.status_code}\n{r.text}", flush=True)
         r.raise_for_status()
         return r.headers["Location"]
 
@@ -155,7 +157,8 @@ async def main():
                     await bot.say(f"⬆️ Uploading… {pos / size:.0%}")
                 print(f"{pos / size:.0%}", flush=True)
 
-            await bot.say(f"✅ Uploaded ({privacy})\nhttps://youtu.be/{vid}\nYouTube may still be processing it.")
+            title = meta["snippet"]["title"]
+            await bot.say(f"✅ {title}\n\n📺 https://youtu.be/{vid}\n🔒 {privacy}\n\nYouTube may still be processing it.")
             await client.disconnect()
         except Exception as e:
             await bot.say(f"❌ Upload failed: {type(e).__name__}. Check the GitHub Actions log.")

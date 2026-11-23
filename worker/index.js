@@ -25,6 +25,11 @@ export default {
       },
       body: JSON.stringify({ ref: "main", inputs: { chat_id: String(m.chat.id), message_id: String(m.message_id) } }),
     });
-    return reply(m.chat.id, r.status === 204 ? "⏳ Queued. The upload runner is starting…" : `❌ Couldn't start the job (GitHub ${r.status}).`, m.message_id);
+    if (r.status === 204) {
+      return reply(m.chat.id, "⏳ Queued. The upload runner is starting…", m.message_id);
+    }
+    const body = await r.text();
+    console.log(`GitHub error: status=${r.status} repo=${env.GH_REPO} body=${body}`);
+    return reply(m.chat.id, `❌ Couldn't start the job (GitHub ${r.status}). ${body}`, m.message_id);
   },
 };
